@@ -1,15 +1,12 @@
 import express, { Application } from "express";
+import adminRoutes from "../routes/admin";
+import publicRoutes from "../routes/shop";
 
 const app: Application = express();
 
+app.use(express.urlencoded({ extended: false }));
+
+app.use(adminRoutes);
+app.use(publicRoutes);
+
 app.listen(3005);
-
-app.use((req, res, next) => {
-  console.log("In hehrheehe111");
-  next();
-});
-
-app.use((req, res, next) => {
-  console.log("In middlware 2");
-});
-
