@@ -1,29 +1,10 @@
 import express from "express";
-import path from "path";
+import { getAddGame, postAddGame } from "../controllers/games";
 
 const router = express.Router();
 
-export const GAME_STORAGE: Game[] = [];
+router.get("/add-game", getAddGame);
 
-type Game = {
-  title: String;
-  platform: String;
-  releaseYear: Number;
-};
-
-router.get("/add-game", (req, res, next) => {
-  res.render("add-game", {
-    pageTitle: "Add a game!",
-    path: "/",
-    activeAdd: true,
-  });
-});
-
-router.post("/add-game", (req, res, next) => {
-  const addedGame: Game = req.body;
-
-  GAME_STORAGE.push(addedGame);
-  res.redirect("/");
-});
+router.post("/add-game", postAddGame);
 
 export default router;

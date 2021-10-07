@@ -1,19 +1,8 @@
 import express from "express";
-import path from "path";
-import { GAME_STORAGE } from "../routes/admin";
+import { getGames } from "../controllers/games";
 
 const router = express.Router();
 
-router.get("/", (req, res, next) => {
-  res.render("home", {
-    games: GAME_STORAGE,
-    pageTitle: "Home",
-    path: "/",
-    hasGames: GAME_STORAGE.length > 0,
-    activeHome: true,
-  });
-
-  console.log(GAME_STORAGE);
-});
+router.get("/", getGames);
 
 export default router;
