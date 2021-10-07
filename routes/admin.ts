@@ -3,7 +3,7 @@ import path from "path";
 
 const router = express.Router();
 
-interface Game {
+type Game = {
   title: String;
   platform: String;
   releaseYear: Number;
