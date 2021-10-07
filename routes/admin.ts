@@ -1,18 +1,22 @@
 import express from "express";
+import path from "path";
 
-const adminRoutes = express.Router();
+const router = express.Router();
 
-adminRoutes.get("/add-game", (req, res, next) => {
-  res.send(`
-      <form action="/game" method="POST">
-          <input type="text" name="title">
-          <button type="submit">Add Game</button>
-      </form>`);
+interface Game {
+  title: String;
+  platform: String;
+  releaseYear: Number;
+}
+
+router.get("/add-game", (req, res, next) => {
+  res.sendFile(path.join(__dirname, "../", "views", "add-game.html"));
 });
 
-adminRoutes.post("/game", (req, res, next) => {
-  console.log(req.body);
+router.post("/add-game", (req, res, next) => {
+  const addedGame: Game = req.body;
+  console.log(addedGame);
   res.redirect("/");
 });
 
-export default adminRoutes;
+export default router;
