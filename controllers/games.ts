@@ -1,12 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-
-export const GAME_STORAGE: Game[] = [];
-
-type Game = {
-  title: String;
-  platform: String;
-  releaseYear: Number;
-};
+import Game from "../models/game";
 
 export const getAddGame = (req: Request, res: Response, next: NextFunction) => {
   res.render("add-game", {
@@ -21,20 +14,25 @@ export const postAddGame = (
   res: Response,
   next: NextFunction
 ) => {
-  const addedGame: Game = req.body;
+  const reqGame: Game = req.body;
 
-  GAME_STORAGE.push(addedGame);
+  const newGame = new Game(
+    reqGame.title,
+    reqGame.platform,
+    reqGame.releaseYear
+  );
+
+  newGame.save();
+  
   res.redirect("/");
 };
 
 export const getGames = (req: Request, res: Response, next: NextFunction) => {
   res.render("home", {
-    games: GAME_STORAGE,
+    games: Game.fetchAll(),
     pageTitle: "Home",
     path: "/",
-    hasGames: GAME_STORAGE.length > 0,
+    hasGames: Game.fetchAll().length > 0,
     activeHome: true,
   });
-
-  console.log(GAME_STORAGE);
 };
