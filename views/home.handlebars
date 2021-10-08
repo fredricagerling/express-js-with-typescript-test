@@ -12,12 +12,8 @@
                 <p>{{this.platform}}</p>
             </div>
             <div>
-                <form action="/admin/delete-game" method="POST">
-                    <button type="submit">Delete</button>
-                </form>
+
                 <a href="/games/{{this.slug}}" class="button">Details</a>
-                <button type="submit">Edit</button>
-                </form>
             </div>
         </article>
         {{/each}}

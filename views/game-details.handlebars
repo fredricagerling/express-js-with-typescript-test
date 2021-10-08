@@ -1,6 +1,12 @@
-    <main>
-        <h1>{{game.title}}</h1>
-        <p>{{game.platform}}</p>
-        <p>{{game.releaseYear}}</p>
-        <p>{{game.description}}</p>
-    </main>
+<main>
+    <h1>{{game.title}}</h1>
+    <p>{{game.platform}}</p>
+    <p>{{game.releaseYear}}</p>
+    <p>{{game.description}}</p>
+
+    <form action="/admin/delete-game" method="POST">
+        <button type="submit">Delete</button>
+    </form>
+
+    <button type="submit">Edit</button>
+</main>

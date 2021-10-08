@@ -50,7 +50,9 @@ export const getGameById = (
   Game.findById(gameId, (game: Game) => {
     res.render("game-details", {
       game: game,
-      pageTitle: game.title
+      path: "/games",
+      pageTitle: game.title,
+      activeHome: true,
     });
   });
 };
