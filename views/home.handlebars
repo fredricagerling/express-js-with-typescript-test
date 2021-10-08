@@ -1,8 +1,8 @@
 <main>
     <h1>My games</h1>
     {{#if hasGames}}
-    {{#each games}}
     <div class="grid">
+        {{#each games}}
         <article class="card">
             <header class="card__header">
                 <h1>{{this.title}}</h1>
@@ -11,9 +11,17 @@
                 <h2>{{this.releaseYear}}</h2>
                 <p>{{this.platform}}</p>
             </div>
+            <div>
+                <form action="/admin/delete-game" method="POST">
+                    <button type="submit">Delete</button>
+                </form>
+                <a href="/games/{{this.slug}}" class="button">Details</a>
+                <button type="submit">Edit</button>
+                </form>
+            </div>
         </article>
+        {{/each}}
     </div>
-    {{/each}}
     {{ else}}
     <h2>No games found.</h2>
     {{/if}}

@@ -17,9 +17,11 @@ export const postAddGame = (
   const reqGame: Game = req.body;
 
   const newGame = new Game(
-    reqGame.title, 
+    reqGame.title,
     reqGame.platform,
-    reqGame.releaseYear
+    reqGame.releaseYear,
+    reqGame.slug,
+    reqGame.description
   );
 
   newGame.save();
@@ -31,10 +33,24 @@ export const getGames = (req: Request, res: Response, next: NextFunction) => {
   Game.fetchAll((games: Game[]) => {
     res.render("home", {
       games: games,
-      pageTitle: "Home", 
+      pageTitle: "Home",
       path: "/",
       hasGames: games.length > 0,
-      activeHome: true, 
+      activeHome: true,
+    });
+  });
+};
+
+export const getGameById = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const gameId = req.params.gameId;
+  Game.findById(gameId, (game: Game) => {
+    res.render("game-details", {
+      game: game,
+      pageTitle: game.title
     });
   });
 };
