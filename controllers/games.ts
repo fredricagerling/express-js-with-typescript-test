@@ -17,22 +17,24 @@ export const postAddGame = (
   const reqGame: Game = req.body;
 
   const newGame = new Game(
-    reqGame.title,
+    reqGame.title, 
     reqGame.platform,
     reqGame.releaseYear
   );
 
   newGame.save();
-  
+
   res.redirect("/");
 };
 
 export const getGames = (req: Request, res: Response, next: NextFunction) => {
-  res.render("home", {
-    games: Game.fetchAll(),
-    pageTitle: "Home",
-    path: "/",
-    hasGames: Game.fetchAll().length > 0,
-    activeHome: true,
+  Game.fetchAll((games: Game[]) => {
+    res.render("home", {
+      games: games,
+      pageTitle: "Home", 
+      path: "/",
+      hasGames: games.length > 0,
+      activeHome: true, 
+    });
   });
 };

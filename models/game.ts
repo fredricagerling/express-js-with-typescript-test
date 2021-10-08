@@ -1,4 +1,21 @@
 const GAME_STORAGE: Game[] = [];
+import path from "path";
+import fs from "fs";
+
+const getFilePath = () => {
+  return path.join(path.dirname(require.main.filename), "data", "games.json");
+};
+
+const getGamesFromFile = (callback: Function) => {
+  const p = getFilePath();
+
+  fs.readFile(p, (err, data) => {
+    if (err) {
+      return callback([]);
+    }
+    callback(JSON.parse(data.toString()));
+  });
+};
 
 export default class Game {
   title: String;
@@ -10,11 +27,20 @@ export default class Game {
     this.platform = _platform;
     this.releaseYear = _releaseYear;
   }
+
   save() {
-    GAME_STORAGE.push(this);
+    getGamesFromFile((games: Game[]) => {
+      const p = getFilePath();
+      games.push(this);
+      fs.writeFile(p, JSON.stringify(games), (err) => {
+        if (err) {
+          console.log(err.message);
+        }
+      });
+    });
   }
 
-  static fetchAll() {
-    return GAME_STORAGE;
+  static fetchAll(callback: Function) {
+    getGamesFromFile(callback);
   }
 }
