@@ -1,14 +1,10 @@
 const GAME_STORAGE: Game[] = [];
 import path from "path";
-import fs from "fs";
+import fs, { PathOrFileDescriptor } from "fs";
 
-const getFilePath = () => {
-  return path.join(path.dirname(require.main.filename), "data", "games.json");
-};
+const p = path.join(path.dirname(require.main.filename), "data", "games.json");
 
 const getGamesFromFile = (callback: Function) => {
-  const p = getFilePath();
-
   fs.readFile(p, (err, data) => {
     if (err) {
       return callback([]);
@@ -22,16 +18,18 @@ export default class Game {
   platform: String;
   releaseYear: Number;
   slug: String;
-  id: Number;
+  id: String;
   description: String;
 
   constructor(
+    _id: String,
     _title: String,
     _platform: String,
     _releaseYear: Number,
     _slug: String,
     _description: String
   ) {
+    this.id = _id;
     this.title = _title;
     this.platform = _platform;
     this.releaseYear = _releaseYear;
@@ -40,11 +38,33 @@ export default class Game {
   }
 
   save() {
-    this.id = Math.random();
     getGamesFromFile((games: Game[]) => {
-      const p = getFilePath();
-      games.push(this);
-      fs.writeFile(p, JSON.stringify(games), (err) => {
+      if (this.id) {
+        const existingGameIndex = games.findIndex(
+          (game) => game.id === this.id
+        );
+        this.update(games, existingGameIndex);
+      } else {
+        this.create(games);
+      }
+    });
+  }
+
+  update(games: Game[], existingGameIndex: number) {
+    const updatedGames = [...games];
+    updatedGames[existingGameIndex] = this;
+
+    fs.writeFile(p, JSON.stringify(updatedGames), (err) => {
+      if (err) {
+        console.log(err.message);
+      }
+    });
+  }
+
+  static delete(id: String) {
+    getGamesFromFile((games: Game[]) => {
+      const updatedGames = games.filter((game) => game.id !== id);
+      fs.writeFile(p, JSON.stringify(updatedGames), (err) => {
         if (err) {
           console.log(err.message);
         }
@@ -52,13 +72,23 @@ export default class Game {
     });
   }
 
+  create(games: Game[]) {
+    this.id = Math.random().toString();
+    games.push(this);
+    fs.writeFile(p, JSON.stringify(games), (err) => {
+      if (err) {
+        console.log(err.message);
+      }
+    });
+  }
+
   static fetchAll(callback: Function) {
     getGamesFromFile(callback);
   }
 
-  static findById(slug: String, callback: Function) {
+  static findById(id: String, callback: Function) {
     getGamesFromFile((games: Game[]) => {
-      const game = games.find((p) => p.slug === slug);
+      const game = games.find((p) => p.id === id);
       callback(game);
     });
   }

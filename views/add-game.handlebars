@@ -1,17 +1,23 @@
 <main>
-    <form class="game-form" action="/admin/add-game" method="POST">
+    <form class="game-form" action="/admin/{{#if editing}}edit-game{{else}}add-game{{/if}}" method="POST">
         <div class="form-control">
             <label for="title">Title</label>
-            <input type="text" name="title" placeholder="Title" />
+            <input type="text" name="title" placeholder="Title" value="{{#if editing}}{{game.title}}{{/if}}" />
             <label for="platform">Platform</label>
-            <input type="text" name="platform" placeholder="Platform" />
+            <input type="text" name="platform" placeholder="Platform" value="{{#if editing}}{{game.platform}}{{/if}}" />
             <label for="releaseYear">Release Year</label>
-            <input type="number" name="releaseYear" placeholder="Release Year" />
+            <input type="number" name="releaseYear" placeholder="Release Year"
+                value="{{#if editing}}{{game.releaseYear}}{{/if}}" />
             <label for="slug">Slug</label>
-            <input type="text" name="slug" placeholder="Slug" />
+            <input type="text" name="slug" placeholder="Slug" value="{{#if editing}}{{game.slug}}{{/if}}" />
             <label for="description">Description</label>
-            <textarea name="description" placeholder="description" rows=5></textarea>
+            <textarea name="description" placeholder="description" rows=5>{{#if editing}}{{game.description}}{{/if}}</textarea>
         </div>
+        {{#if editing}}
+        <input type="hidden" value="{{game.id}}" name="gameId">
+        <button type="submit">Update Game</button>
+        {{else}}
         <button type="submit">Add Game</button>
+        {{/if}}
     </form>
 </main>

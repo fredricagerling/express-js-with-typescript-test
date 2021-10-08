@@ -5,8 +5,9 @@
     <p>{{game.description}}</p>
 
     <form action="/admin/delete-game" method="POST">
+        <input type="hidden" name="gameId" value="{{game.id}}">
         <button type="submit">Delete</button>
     </form>
 
-    <button type="submit">Edit</button>
+    <a href='/admin/edit-game/{{game.id}}?edit=true'>Edit</button>
 </main>
