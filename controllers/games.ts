@@ -1,5 +1,8 @@
 import { Request, Response, NextFunction } from "express";
-import Game from "../models/game";
+import { PrismaClient, Game } from ".prisma/client";
+import { ok } from "assert";
+
+const prisma = new PrismaClient();
 
 export const getAddGame = (req: Request, res: Response, next: NextFunction) => {
   res.render("add-game", {
@@ -10,106 +13,113 @@ export const getAddGame = (req: Request, res: Response, next: NextFunction) => {
   });
 };
 
-export const getEditGame = (
+export const getEditGame = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   const editMode = req.query.edit;
-  console.log(editMode);
-  const gameId = req.params.gameId;
+  const gameId = parseInt(req.params.gameId);
 
-  Game.findById(gameId, (game: Game) => {
-    res.render("add-game", {
-      pageTitle: "Edit a game!",
-      path: "/",
-      editing: editMode,
-      game: game,
-    });
-    console.log(game);
+  const game = await prisma.game.findUnique({
+    where: { id: gameId },
   });
+
+  res.render("add-game", {
+    pageTitle: "Edit a game!",
+    path: "/",
+    editing: editMode,
+    game: game,
+  });
+  console.log(game);
 };
 
-export const postEditGame = (
+export const postEditGame = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const gameId = req.body.gameId;
+  const gameId = parseInt(req.body.gameId);
   const updatedTitle = req.body.title;
   const updatedPlatform = req.body.platform;
-  const updatedReleaseYear = req.body.releaseYear;
+  const updatedReleaseYear = parseInt(req.body.releaseYear);
   const updatedSlug = req.body.slug;
   const updatedDescription = req.body.description;
 
-  const updatedGame = new Game(
-    gameId,
-    updatedTitle,
-    updatedPlatform,
-    updatedReleaseYear,
-    updatedSlug,
-    updatedDescription
-  );
-
-  updatedGame.save();
-  res.redirect("/");
-};
-
-export const postAddGame = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const reqGame: Game = req.body;
-
-  const newGame = new Game(
-    (reqGame.id = null),
-    reqGame.title,
-    reqGame.platform,
-    reqGame.releaseYear,
-    reqGame.slug,
-    reqGame.description
-  );
-
-  newGame.save();
+  await prisma.game.update({
+    where: { id: gameId },
+    data: {
+      title: updatedTitle,
+      platform: updatedPlatform,
+      releaseYear: updatedReleaseYear,
+      slug: updatedSlug,
+      description: updatedDescription,
+    },
+  });
 
   res.redirect("/");
 };
 
-export const getGames = (req: Request, res: Response, next: NextFunction) => {
-  Game.fetchAll((games: Game[]) => {
-    res.render("home", {
-      games: games,
-      pageTitle: "Home",
-      path: "/",
-      hasGames: games.length > 0,
-      activeHome: true,
-    });
-  });
-};
-
-export const getGameById = (
+export const postAddGame = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const gameId = req.params.gameId;
-  Game.findById(gameId, (game: Game) => {
-    res.render("game-details", {
-      game: game,
-      path: "/games",
-      pageTitle: game.title,
-      activeHome: true,
-    });
+  await prisma.game.create({
+    data: {
+      title: req.body.title,
+      platform: req.body.platform,
+      releaseYear: parseInt(req.body.releaseYear),
+      slug: req.body.slug,
+      description: req.body.description,
+    },
   });
+  res.redirect("/");
 };
 
-export const postDeleteGame = (
+export const getGames = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const gameId = req.body.gameId;
-  Game.delete(gameId);
-  res.redirect('/');
+  const allGames = await prisma.game.findMany();
+
+  res.render("home", {
+    games: allGames,
+    pageTitle: "Home",
+    path: "/",
+    hasGames: allGames.length > 0,
+    activeHome: true,
+  });
+};
+
+export const getGameById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const gameId = parseInt(req.params.gameId);
+  const game = await prisma.game.findUnique({
+    where: { id: gameId },
+  });
+
+  res.render("game-details", {
+    game: game,
+    path: "/games",
+    pageTitle: game.title,
+    activeHome: true,
+  });
+};
+
+export const postDeleteGame = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const gameId = parseInt(req.body.gameId);
+  await prisma.game.delete({
+    where: { id: gameId },
+  });
+
+  res.redirect("/");
 };
