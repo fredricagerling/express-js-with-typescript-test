@@ -110,12 +110,7 @@ export const getGames = async (
     path: "/",
     hasGames: paginatedGames.length > 0,
     activeHome: true,
-    currentPage: page,
-    hasNextPage: ITEMS_PER_PAGE * page < numOfGames,
-    hasPreviousPage: page > 1,
-    nextPage: page + 1,
-    prevPage: page - 1,
-    lastPage: Math.ceil(numOfGames / ITEMS_PER_PAGE)
+    numOfPages: Math.ceil(numOfGames / ITEMS_PER_PAGE)
   });
 };
 

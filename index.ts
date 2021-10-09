@@ -12,8 +12,13 @@ app.engine(
   "handlebars",
   handlebars({
     helpers: {
-      times: function (n: number) {
-        return n;
+      times: function (n: any, block: any) {
+        var accum = "";
+        for (var i = 0; i < n; ++i) accum += block.fn(i);
+        return accum;
+      },
+      inc: function (value: any, options: any) {
+        return parseInt(value) + 1;
       },
     },
   })
