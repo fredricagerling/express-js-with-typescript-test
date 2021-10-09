@@ -13,6 +13,11 @@
         </article>
         {{/each}}
     </div>
+    <div class="pagination_container">
+        <a class="pagination" href="/?page=1">1</a>
+        <a class="pagination" href="/?page={{nextPage}}">{{nextPage}}</a>
+    </div>
+
     {{ else}}
     <h2>No games found.</h2>
     {{/if}}

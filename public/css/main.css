@@ -105,7 +105,7 @@ button:hover,
   width: 17rem;
   text-align: center;
   padding: 1rem 0;
-  display:flex;
+  display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
@@ -140,3 +140,20 @@ button:hover,
   width: 100%;
   align-items: center;
 }
+
+.pagination_container {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.pagination_container a {
+  border: 1px darkred solid;
+  padding: 2px;
+  color: darkred;
+}
+
+.pagination_container a:hover {
+  color: white;
+  background-color: tomato;
+}
+

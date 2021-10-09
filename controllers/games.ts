@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from "express";
-import { PrismaClient } from ".prisma/client";
+import { PrismaClient, Game } from ".prisma/client";
 
 const prisma = new PrismaClient();
+const ITEMS_PER_PAGE: number = 3;
 
 export const getAddGame = (req: Request, res: Response, next: NextFunction) => {
   res.render("add-game", {
@@ -80,14 +81,41 @@ export const getGames = async (
   res: Response,
   next: NextFunction
 ) => {
-  const allGames = await prisma.game.findMany();
+  let paginatedGames: Game[] = [];
+  let skip = 0;
+  let page: number;
+
+  if (req.query.page) {
+    try {
+      page = parseInt(req.query.page.toString());
+    } catch (error) {
+      console.log(error);
+    }
+
+    if (page > 1) {
+      skip = page - 1;
+    }
+  }
+  
+  const numOfGames = await prisma.game.count();
+
+  paginatedGames = await prisma.game.findMany({
+    skip: skip * ITEMS_PER_PAGE,
+    take: ITEMS_PER_PAGE,
+  });
 
   res.render("home", {
-    games: allGames,
+    games: paginatedGames,
     pageTitle: "Home",
     path: "/",
-    hasGames: allGames.length > 0,
+    hasGames: paginatedGames.length > 0,
     activeHome: true,
+    currentPage: page,
+    hasNextPage: ITEMS_PER_PAGE * page < numOfGames,
+    hasPreviousPage: page > 1,
+    nextPage: page + 1,
+    prevPage: page - 1,
+    lastPage: Math.ceil(numOfGames / ITEMS_PER_PAGE)
   });
 };
 
