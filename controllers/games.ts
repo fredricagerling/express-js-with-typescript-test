@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { PrismaClient, Game } from ".prisma/client";
-import { ok } from "assert";
+import { PrismaClient } from ".prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -31,7 +30,6 @@ export const getEditGame = async (
     editing: editMode,
     game: game,
   });
-  console.log(game);
 };
 
 export const postEditGame = async (
@@ -43,7 +41,7 @@ export const postEditGame = async (
   const updatedTitle = req.body.title;
   const updatedPlatform = req.body.platform;
   const updatedReleaseYear = parseInt(req.body.releaseYear);
-  const updatedSlug = req.body.slug;
+  const updatedImageUrl = req.body.imageUrl;
   const updatedDescription = req.body.description;
 
   await prisma.game.update({
@@ -52,7 +50,7 @@ export const postEditGame = async (
       title: updatedTitle,
       platform: updatedPlatform,
       releaseYear: updatedReleaseYear,
-      slug: updatedSlug,
+      imageUrl: updatedImageUrl,
       description: updatedDescription,
     },
   });
@@ -70,7 +68,7 @@ export const postAddGame = async (
       title: req.body.title,
       platform: req.body.platform,
       releaseYear: parseInt(req.body.releaseYear),
-      slug: req.body.slug,
+      imageUrl: req.body.imageUrl,
       description: req.body.description,
     },
   });

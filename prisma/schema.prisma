@@ -13,8 +13,8 @@ generator client {
 model Game {
   id          Int    @id @default(autoincrement())
   title       String
-  platform    String
-  releaseYear Int
-  slug        String
-  description String
+  platform    String?
+  releaseYear Int?
+  imageUrl    String?
+  description String?
 }

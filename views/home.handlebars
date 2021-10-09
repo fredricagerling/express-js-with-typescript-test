@@ -1,19 +1,14 @@
 <main>
-    <h1>My games</h1>
     {{#if hasGames}}
     <div class="grid">
         {{#each games}}
         <article class="card">
-            <header class="card__header">
-                <h1>{{this.title}}</h1>
-            </header>
             <div class="card__content">
-                <h2>{{this.releaseYear}}</h2>
-                <p>{{this.platform}}</p>
+                <img src="{{this.imageUrl}}">
+                <h3>{{this.title}}</h3>
             </div>
-            <div>
-
-                <a href="/games/{{this.id}}" class="button">Details</a>
+            <div class="card__content__actions">
+                <a class="btn" href="/games/{{this.id}}" class="button">Details</a>
             </div>
         </article>
         {{/each}}

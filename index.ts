@@ -8,10 +8,7 @@ import { get404 } from "./controllers/error";
 const app: Application = express();
 const PORT: Number = 3005;
 
-app.engine(
-  "handlebars",
-  handlebars({ layoutsDir: "views/layout/", defaultLayout: "main-layout" })
-);
+app.engine("handlebars", handlebars());
 app.set("view engine", "handlebars");
 app.set("views", "views");
 

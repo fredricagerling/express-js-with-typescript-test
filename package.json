@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "nodemon index.ts",
-    "dev:ts": "nodemon"
+    "dev": "nodemon"
   },
   "author": "Fredric",
   "license": "ISC",

@@ -1,6 +1,5 @@
 ## Disclaimer
-This project was simply to learn Express JS together with typescript so Zero thought and effort was put into making things looking pretty.
-I'm fully aware that it looks bare and ugly AF, so don't judge my design capabilities by this project! :)
+This project was simply to learn Express JS together with typescript and get a feeling for Prisma Client, so zero thought or effort was put into making things looking pretty. :)
 
 ## Installation and running
 
